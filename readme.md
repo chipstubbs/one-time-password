@@ -1,9 +1,10 @@
-#firebase install
+# firebase install
 
-#firebase init
+# firebase init
 
-#firebase login to your account
+# firebase login to your account
 
-#firebase connect to your project
+# firebase connect to your project
 
-to start `firebase deploy --project one-time-password-eb048`
+# To start 
+`firebase deploy --project one-time-password-eb048`
