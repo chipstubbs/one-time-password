@@ -1,10 +1,14 @@
-# firebase install
+# Install
+Install firebase cli
 
-# firebase init
+# Start
+`firebase init`
 
-# firebase login to your account
+# Login
+`firebase login` to your account
 
-# firebase connect to your project
+# Select Functions
+Select default
 
 # To start 
 `firebase deploy --project one-time-password-eb048`
