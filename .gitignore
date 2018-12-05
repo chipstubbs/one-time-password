@@ -66,3 +66,4 @@ node_modules/
 
 # secret service account info
 functions/service_account.json
+functions/twilio.js
