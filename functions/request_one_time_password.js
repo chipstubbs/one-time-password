@@ -9,7 +9,6 @@ module.exports = function(req, res) {
     const phone = String(req.body.phone).replace(/[^\d]/g, "");
 
     admin.auth().getUser(phone)
-        // eslint-disable-next-line promise/always-return
         .then(userRecord => {
             const code = Math.floor((Math.random() * 8999 + 1000));
 
@@ -25,8 +24,10 @@ module.exports = function(req, res) {
                         res.send({ success: true });
                     });
             })
+
+            return console.log(userRecord);
         })
-        .catch((err) => {
-            res.status(422).send({ error: err });
+        .catch((error) => {
+            res.status(422).send({ error: "ok" });
         });
 }
