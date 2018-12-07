@@ -30,4 +30,6 @@ module.exports = function(req, res) {
             })
         })
         .catch((err) => res.status(422).send({ error: err }))
+
+        return null;
 }
