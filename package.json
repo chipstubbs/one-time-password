@@ -1,0 +1,5 @@
+{
+  "dependencies": {
+    "authy-client": "^1.1.2"
+  }
+}

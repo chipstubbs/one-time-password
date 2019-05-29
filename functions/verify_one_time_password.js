@@ -1,4 +1,7 @@
 const admin = require('firebase-admin');
+const authy = require('./authyConfig.json');
+const Client = require('authy-client').Client;
+const client = new Client(authy);
 
 module.exports = function(req, res) {
     if (!req.body.phone || !req.body.code) {
@@ -6,7 +9,7 @@ module.exports = function(req, res) {
     }
 
     const phone = String(req.body.phone).replace(/[^\d]/g, '');
-    const code = parseInt(req.body.code);
+    const code = String(parseInt(req.body.code));
 
     admin.auth().getUser(phone)
         // eslint-disable-next-line promise/always-return
@@ -16,20 +19,28 @@ module.exports = function(req, res) {
                 ref.off();
                 const user = snapshot.val();
 
-                if (user.code !== code || !user.codeValid) { return res.status(422).send({ error: 'Code not valid' }); }
+                client.verifyToken({ authyId: user.authyId, token: code }, (err, response) => {
+                    // if (err) throw err.response
+                    if (err) throw new Error('Code is invalid');
+                   
+                    console.log('Token is valid');
+                        
+                        ref.update({ itWorked: true });
+                        // eslint-disable-next-line promise/no-nesting
+                        admin.auth().createCustomToken(phone)
+                            .then(token => res.send({ token: token }))
+                            // eslint-disable-next-line handle-callback-err
+                            .catch(error => {
+                                res.status(422).send({ error: 'Error receiving token' });
+                            })
+                });
+                // if (user.code !== code || !user.codeValid) { return res.status(422).send({ error: 'Code not valid' }); }
 
-                ref.update({ codeValid: false });
-                // eslint-disable-next-line promise/no-nesting
-                admin.auth().createCustomToken(phone)
-                    .then(token => res.send({ token: token }))
-                    // eslint-disable-next-line handle-callback-err
-                    .catch(err => {
-                        res.status(422).send({ error: 'Error receiving token' });
-                    })
+                
 
             })
         })
-        .catch((err) => res.status(422).send({ error: err }))
+        .catch((err) => res.status(422).send({ error: 'verify line 42 error: ' + err }))
 
         return null;
 }
